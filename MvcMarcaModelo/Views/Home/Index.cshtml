@@ -1,0 +1,53 @@
+﻿@model MvcMarcaModelo.Models.MarcaModeloViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Selecione o veículo</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="MarcaId" class="control-label"></label>
+                    <select asp-for="MarcaId" class="form-control" asp-items="ViewBag.MarcaId">
+                        <option value="">Selecione uma marca</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ModeloId" class="control-label"></label>
+                    <select asp-for="ModeloId" class="form-control" asp-items="ViewBag.ModeloId">
+                        <option value="">Selecione um modelo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Buscar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $("select#MarcaId").change(function () {
+                var marcaid = $(this).val();
+
+                $("select#ModeloId").empty();
+
+                $.getJSON(`Modelos/GetModelosPorMarca/${marcaid}`, function (data) {
+                    //console.log(data);
+                    $("select#ModeloId").append(`<option value="0">Selecione um modelo</option>`);
+                    $.each(data, function (i, item) {
+                        $("select#ModeloId").append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                });
+            })
+        });
+    </script>
+ }
